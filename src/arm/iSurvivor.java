@@ -8,6 +8,7 @@ import java.awt.Panel;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.awt.GridBagLayout;
 
 import javax.imageio.ImageIO;
@@ -38,6 +39,17 @@ public class iSurvivor {
 	*5=quantialoot
 	*/
 	private int[][] tabuleiro=new int[50][6];
+	Tabuleiro tab;
+	cartas baralho;
+	player p1;
+	player p2;
+	player p3;
+	player p4;
+	int maxhip=30;
+	int maxfome=10;
+	int fomePorTurno=1;
+	int HipotermiaBasePorTurno=1;
+	int hpInicial=150;
 	
 	/**
 	 * Launch the application.
@@ -74,11 +86,11 @@ public class iSurvivor {
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Servidor porta:");
-		lblNewLabel.setBounds(1431, 11, 95, 14);
+		lblNewLabel.setBounds(1431, 11, 105, 38);
 		frame.getContentPane().add(lblNewLabel);
 		
 		ServerPort = new JTextField();
-		ServerPort.setBounds(1431, 34, 86, 20);
+		ServerPort.setBounds(1431, 60, 86, 20);
 		frame.getContentPane().add(ServerPort);
 		ServerPort.setColumns(10);
 		
@@ -95,6 +107,8 @@ public class iSurvivor {
 		
 		 cellimg = ImageIO.read(this.getClass().getResource("imgs/cell.png"));
 		 playerimg = ImageIO.read(this.getClass().getResource("imgs/player.png"));
+	
+
 		/*Exemplos de criando grid manualmente
 		JLabel lb1 = new JLabel(new ImageIcon(cellimg));
 		GridBagConstraints gbc_lb1 = new GridBagConstraints();
@@ -155,15 +169,27 @@ public class iSurvivor {
 			count--;
 		}
 		
+		//Coloca o tabuleiro gerado na classe apropriada tab
+		tab=new Tabuleiro(this.tabuleiro);
+		baralho=new cartas();
+		p1=new player(maxfome,maxhip,hpInicial);
+		p2=new player(maxfome,maxhip,hpInicial);
+		p3=new player(maxfome,maxhip,hpInicial);
+		p4=new player(maxfome,maxhip,hpInicial);
+		/*Teste
+	int a= tab.getTipo(7);
+		if(a>0){
+			int card=baralho.randomPullNum(a);
+			lblNewLabel.setText(baralho.printCard(card));
+		}*/
+	
 		
 		
 		
-		
-		 //temp.setVisible(false);
 		JButton btnRodarDado = new JButton("Rodar Dado");
 		btnRodarDado.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+			/*	 Codigo de andar 1 casa
 				Component temp = panel.getComponent(tabuleiro[gt][0]);
 				((JLabel) temp).setIcon(new ImageIcon(cellimg));
 				gt=gt+1;
@@ -171,10 +197,40 @@ public class iSurvivor {
 					gt=0;
 				}
 				temp = panel.getComponent(tabuleiro[gt][0]);
+				((JLabel) temp).setIcon(new ImageIcon(playerimg));*/
+				Component temp = panel.getComponent(tabuleiro[gt][0]);
+				((JLabel) temp).setIcon(new ImageIcon(cellimg));
+				gt=gt+((int)(Math.random() * 6) + 1); //Roda dado de 1 a 6
+				if(gt>43) {
+					gt=gt-43; //Caso passe da casa 43, então reduz 43 ao valor, simulando começar novamente pela casa 0
+				}
+				temp = panel.getComponent(tabuleiro[gt][0]); //Reposiciona jogador
 				((JLabel) temp).setIcon(new ImageIcon(playerimg));
+
 			}
 		});
 		btnRodarDado.setBounds(1256, 173, 261, 23);
 		frame.getContentPane().add(btnRodarDado);
+		
+		JButton Carta = new JButton("Pegue uma carta");
+		Carta.setBounds(1256, 240, 261, 23);
+		frame.getContentPane().add(Carta);
+		
+		JLabel lblHP = new JLabel("HP:0");
+		lblHP.setBounds(1256, 356, 46, 14);
+		frame.getContentPane().add(lblHP);
+		
+		JLabel lblHipo = new JLabel("Hipo: 0");
+		lblHipo.setBounds(1256, 382, 46, 14);
+		frame.getContentPane().add(lblHipo);
+		
+		JLabel lblFome = new JLabel("Fome: 0");
+		lblFome.setBounds(1256, 409, 46, 14);
+		frame.getContentPane().add(lblFome);
+		
+		JLabel lblEquips = new JLabel("Equips:[ ]");
+		lblEquips.setBounds(1256, 438, 46, 14);
+		frame.getContentPane().add(lblEquips);
 	}
 }
+
